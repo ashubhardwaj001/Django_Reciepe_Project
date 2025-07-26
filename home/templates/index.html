@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block start %}
+
+    <a href= "/about/">
+        About
+    </a>
+
+    <a href="/contact/">
+        Contact
+    </a>
+
+    <h1>This is index page</h1>
+    <p>This is the home page.</p>
+    {{peoples}}
+
+    <table class = "container">
+  <tr>
+    <th>S.no</th>
+    <th>Name</th>
+    <th>Age</th>
+    <th>Can Vote</th>
+  </tr>
+    {% for people in peoples %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ people.name }}</td>
+        <td>{{ people.age }}</td>
+        <td>
+            {% if people.age >= 18 %}
+                Yes
+            {% else %}
+                No
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+  
+</table>
+
+{% endblock %}
