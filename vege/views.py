@@ -2,8 +2,11 @@ from django.shortcuts import render,redirect
 from .models import *
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
+@login_required(login_url='/login/')
 def receipes(request):
     # This view will render the recipes page
     if request.method == 'POST':
@@ -39,13 +42,14 @@ def receipes(request):
     }
     return render(request, 'receipes.html', context)
 
-
+@login_required(login_url='/login/')
 def delete_receipe(request, id):
     # This view will delete a recipe
     queryset = Receipe.objects.get(id=id)
     queryset.delete()
     return redirect('/receipes/')
 
+@login_required(login_url='/login/')
 def update_receipe(request, id):
 
     queryset = Receipe.objects.get(id=id)
@@ -73,7 +77,33 @@ def update_receipe(request, id):
 
 def login_page(request):
 
+    if request.method == 'POST':
+        data = request.POST
+        username = data.get('username')
+        password = data.get('password')
+
+        if not User.objects.filter(username=username).exists():
+            messages.info(request, 'Username does not exist')
+            return redirect('/login/')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is None:
+            messages.info(request, 'Invalid password')
+            return redirect('/login/')
+        else:
+            # Log the user in
+            login(request, user)
+            return redirect('/receipes/')
+
+
     return render(request, 'login.html')
+
+@login_required(login_url='/login/')
+def logout_page(request):
+    # This view will log out the user
+    logout(request)
+    return redirect('/login/')
 
 def register(request):
 
