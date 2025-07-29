@@ -25,6 +25,13 @@ class StudentID(models.Model):
 
     def __str__(self) -> str:
         return self.student_id
+    
+
+class Subject(models.Model):
+    subject_name = models.CharField(max_length=100)
+
+    def __str__(self) -> str:
+        return self.subject_name    
 
 class Student(models.Model):
     student_id = models.ForeignKey(StudentID, on_delete=models.CASCADE)
@@ -41,3 +48,23 @@ class Student(models.Model):
         ordering = ['student_name']
         verbose_name = 'Student'
 
+class SubjectMarks(models.Model):
+    student = models.ForeignKey(Student, related_name= "studentmarks", on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    marks = models.IntegerField(default=0)
+
+    def __str__(self) -> str:
+        return f"{self.student.student_name} - {self.subject.subject_name} - {self.marks}"
+    
+    class Meta:
+        unique_together = ('student', 'subject' )
+
+
+class ReportCard(models.Model):
+    student = models.ForeignKey(Student, related_name="studentreportcard", on_delete=models.CASCADE)
+    student_rank = models.IntegerField(default=0)
+    date_of_report_card_generation = models.DateField(auto_now_add=True)
+
+
+    class Meta:
+        unique_together = ('student_rank', 'date_of_report_card_generation')
