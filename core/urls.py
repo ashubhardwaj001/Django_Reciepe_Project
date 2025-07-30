@@ -35,6 +35,9 @@ urlpatterns = [
     path('logout/', logout_page, name='logout_page'),
     path('students/', get_students, name='get_students'),
     path('see_marks/<student_id>/', see_marks, name='see_marks'),
+
+    path('send_email/', send_email, name='send_email'),
+
     
 
     path('success-page/', success_page, name='success_page'),

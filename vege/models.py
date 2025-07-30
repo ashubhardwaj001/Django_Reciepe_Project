@@ -1,6 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
+class StudentManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_deleted=False)
 
 class Receipe(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL , null=True, blank=True)
@@ -8,6 +16,9 @@ class Receipe(models.Model):
     receipe_description = models.TextField()
     receipe_image = models.ImageField(upload_to='recipe')
     receipe_view_count = models.IntegerField(default=1)
+    
+
+    
 
 
 class Department(models.Model):
@@ -40,6 +51,10 @@ class Student(models.Model):
     student_email = models.EmailField(unique=True)
     student_age = models.IntegerField(default=10)
     student_address = models.TextField()
+    is_deleted = models.BooleanField(default=False)
+
+    objects = StudentManager()
+    admin_objects = models.Manager()  # This will include all objects, including deleted ones
 
     def __str__(self) -> str:
         return self.student_name

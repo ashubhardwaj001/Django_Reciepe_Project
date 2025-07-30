@@ -6,6 +6,11 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q,Sum
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()  # This will use the custom user model defined in settings.AUTH_USER_MODEL
+
 # Create your views here.
 
 @login_required(login_url='/login/')
